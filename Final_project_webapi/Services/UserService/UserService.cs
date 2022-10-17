@@ -13,15 +13,23 @@ namespace Final_project_webapi.Services.UserService
             new User() {UserId = 4, FName = "Oscar", LName = "Guerrero", UserType = UserType.SystemAdmin, Phone = 4429134283, Email = "email4@email.com" }
         };
 
-        public List<User> Add(User usuario)
+        //Async is used alongside Task and await to use asynchronous calls, and it´s faster for fetching data from a database
+        //ServiceResponse is used alongside the new object and it helps in the frontend to print a better message to the user
+
+        //Add user method
+        public async Task<ServiceResponse<List<User>>> Add(User usuario)
         {
+            var serviceResponse = new ServiceResponse<List<User>>();
             var userListCount = usersList.Count();
             usuario.UserId = userListCount + 1;
             usersList.Add(usuario);
-            return usersList;
+            serviceResponse.Data = usersList;
+
+            return serviceResponse;
         }
 
-        public List<User> DeleteUser(int id)
+        //Delete User
+        public async Task<ServiceResponse<List<User>>> DeleteUser(int id)
         {
 
             //First identify the user
@@ -33,33 +41,38 @@ namespace Final_project_webapi.Services.UserService
                 }
             }
 
-            return usersList;
+            return new ServiceResponse<List<User>> { Data = usersList };
 
         }
 
-        public List<User> GetAll()
+        //Get all users
+        public async Task<ServiceResponse<List<User>>> GetAll()
         {
 
-            return usersList;
+            return new ServiceResponse<List<User>> { Data = usersList };
 
         }
 
-        public User GetById(int id)
+        //Get user by Id
+        public async Task<ServiceResponse<User>> GetById(int id)
         {
-
+            var serviceResponse = new ServiceResponse<User>();
             var user = usersList.First(user => user.UserId == id);
-            return user;
+            serviceResponse.Data = user;
+            return serviceResponse;
 
 
         }
 
-        public int GetCount()
+        //Get number of entries in archives
+        public async Task<ServiceResponse<int>> GetCount()
         {
             var usersCount = usersList.Count();
-            return usersCount;
+            return new ServiceResponse<int> { Data = usersCount };
         }
 
-        public User UpdateUser(User usuario)
+        //Update User
+        public async Task<ServiceResponse<User>> UpdateUser(User usuario)
         {
             foreach (var user in usersList)
             {
@@ -72,7 +85,7 @@ namespace Final_project_webapi.Services.UserService
                     user.Email = usuario.Email;
                 }
             }
-            return usuario;
+            return new ServiceResponse<User> { Data = usuario };
         }
     }
 }

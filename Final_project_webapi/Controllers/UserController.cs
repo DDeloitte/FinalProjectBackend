@@ -16,11 +16,11 @@ namespace Final_project_webapi.Controllers
 
         //GetAll Users
         [HttpGet("getAll")]
-        public ActionResult<List<User>> GetAll()
+        public async Task<ActionResult<ServiceResponse<List<User>>>> GetAll()
         {
             try
             {
-                return Ok(userService.GetAll());
+                return Ok( await userService.GetAll());
 
             }
             catch (Exception Ex)
@@ -32,19 +32,19 @@ namespace Final_project_webapi.Controllers
         }
         //Add User
         [HttpPost("add")]
-        public ActionResult<List<User>> Add(User usuario)
+        public async Task<ActionResult<ServiceResponse<List<User>>>> Add(User usuario)
         {
-            return Ok(userService.Add(usuario));
+            return Ok(await userService.Add(usuario));
         }
 
         //Get User
         [HttpGet("get/{id}")]
-        public ActionResult<User> GetById(int id)
+        public async Task<ActionResult<ServiceResponse<User>>> GetById(int id)
         {
             try
             {
 
-                return Ok(userService.GetById(id));
+                return Ok(await userService.GetById(id));
 
             }
             catch (Exception Ex)
@@ -57,25 +57,25 @@ namespace Final_project_webapi.Controllers
 
         //Update User
         [HttpPut("update")]
-        public ActionResult<User> UpdateUser(User usuario)
+        public async Task<ActionResult<ServiceResponse<User>>> UpdateUser(User usuario)
         {
-            return Ok(userService.UpdateUser(usuario));
+            return Ok(await userService.UpdateUser(usuario));
         }
 
         //Users in datababase
         [HttpGet("getCount")]
-        public ActionResult<int> GetCount()
+        public async Task<ActionResult<ServiceResponse<int>>> GetCount()
         {
-            return Ok(userService.GetCount());
+            return Ok(await userService.GetCount());
         }
 
         //Delete User end point
         [HttpDelete("delete/{id}")]
-        public ActionResult<List<User>> DeleteUser(int id)
+        public async Task<ActionResult<ServiceResponse<List<User>>>> DeleteUser(int id)
         {
             try
             {
-                return Ok(userService.DeleteUser(id));
+                return Ok(await userService.DeleteUser(id));
             }
             catch (Exception Ex)
             {
