@@ -87,7 +87,7 @@ namespace Final_project_webapi.Controllers
         }
 
         //Delete User end point
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public ActionResult<User> DeleteUser(int id)
         {
             try

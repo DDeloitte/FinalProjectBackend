@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Final_project_webapi.Models
 {
+    //Showing the string instead of the number
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum UserType
     {
         User = 1,
