@@ -1,4 +1,5 @@
 ﻿using Final_project_webapi.Models;
+using Final_project_webapi.Services.UserService;
 
 namespace Final_project_webapi.Controllers
 {
@@ -6,23 +7,20 @@ namespace Final_project_webapi.Controllers
     [ApiController]//Indicates http api response
     public class UserController : ControllerBase
     {
+        private readonly IUserService userService;
 
-        //Dummy list of users
-        private static List<User> usersList = new List<User>()
+        public UserController(IUserService userService)
         {
-            new User() {UserId = 1, FName = "David", LName = "Molina", UserType = UserType.User, Phone = 4423187283, Email = "email1@email.com" },
-            new User() {UserId = 2, FName = "Guillermo", LName = "Pacheco", UserType = UserType.SystemAdmin, Phone = 4423387273, Email = "email2@email.com" },
-            new User() {UserId = 3, FName = "Daniel", LName = "Gamboa", UserType = UserType.SystemAdmin, Phone = 4422187453, Email = "email3@email.com" },
-            new User() {UserId = 4, FName = "Oscar", LName = "Guerrero", UserType = UserType.SystemAdmin, Phone = 4429134283, Email = "email4@email.com" }
-        };
+            this.userService = userService;
+        }
 
         //GetAll Users
         [HttpGet("getAll")]
-        public ActionResult<User> GetAll()
+        public ActionResult<List<User>> GetAll()
         {
             try
             {
-                return Ok(usersList);
+                return Ok(userService.GetAll());
 
             }
             catch (Exception Ex)
@@ -34,22 +32,19 @@ namespace Final_project_webapi.Controllers
         }
         //Add User
         [HttpPost("add")]
-        public ActionResult<User> Add(User usuario)
+        public ActionResult<List<User>> Add(User usuario)
         {
-            var userListCount = usersList.Count();
-            usuario.UserId = userListCount + 1;
-            usersList.Add(usuario);
-            return Ok(usuario);
+            return Ok(userService.Add(usuario));
         }
 
         //Get User
         [HttpGet("get/{id}")]
-        public ActionResult<User> ObtenerUsuario(int id)
+        public ActionResult<User> GetById(int id)
         {
             try
             {
-                var user = usersList.First(user => user.UserId == id);
-                return Ok(user);
+
+                return Ok(userService.GetById(id));
 
             }
             catch (Exception Ex)
@@ -61,47 +56,26 @@ namespace Final_project_webapi.Controllers
         }
 
         //Update User
-        [HttpPatch("update")]
-        public ActionResult<User> ActualizarUsuario(User usuario)
+        [HttpPut("update")]
+        public ActionResult<User> UpdateUser(User usuario)
         {
-            foreach (var user in usersList)
-            {
-                if (user.UserId == usuario.UserId)
-                {
-                    user.UserType = usuario.UserType;
-                    user.FName = usuario.FName;
-                    user.LName = usuario.LName;
-                    user.Phone = usuario.Phone;
-                    user.Email = usuario.Email;
-                }
-            }
-            return Ok(usuario);
+            return Ok(userService.UpdateUser(usuario));
         }
 
         //Users in datababase
         [HttpGet("getCount")]
-        public ActionResult<User> GetCount()
+        public ActionResult<int> GetCount()
         {
-            var usersCount = usersList.Count();
-            return Ok(usersCount);
+            return Ok(userService.GetCount());
         }
 
         //Delete User end point
         [HttpDelete("delete/{id}")]
-        public ActionResult<User> DeleteUser(int id)
+        public ActionResult<List<User>> DeleteUser(int id)
         {
             try
             {
-                //First identify the user
-                foreach (var user in usersList)
-                {
-                    if (user.UserId == id)
-                    {
-                        usersList.Remove(user);
-                    }
-                }
-
-                return Ok();
+                return Ok(userService.DeleteUser(id));
             }
             catch (Exception Ex)
             {
