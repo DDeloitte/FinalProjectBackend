@@ -53,3 +53,4 @@ C:\Users\dfuentesmolina\Documents\WebApiCourse\Final_Project\Final_project_webap
 C:\Users\dfuentesmolina\Documents\WebApiCourse\Final_Project\Final_project_webapi\Final_project_webapi\obj\Debug\net6.0\Final_project_webapi.pdb
 C:\Users\dfuentesmolina\Documents\WebApiCourse\Final_Project\Final_project_webapi\Final_project_webapi\obj\Debug\net6.0\Final_project_webapi.genruntimeconfig.cache
 C:\Users\dfuentesmolina\Documents\WebApiCourse\Final_Project\Final_project_webapi\Final_project_webapi\obj\Debug\net6.0\ref\Final_project_webapi.dll
+C:\Users\dfuentesmolina\Documents\WebApiCourse\Final_Project\Final_project_webapi\Final_project_webapi\bin\Debug\net6.0\AutoMapper.dll

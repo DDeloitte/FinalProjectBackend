@@ -1,4 +1,5 @@
-﻿using Final_project_webapi.Models;
+﻿using Final_project_webapi.Dtos;
+using Final_project_webapi.Models;
 
 namespace Final_project_webapi.Services.UserService
 {
@@ -11,7 +12,7 @@ namespace Final_project_webapi.Services.UserService
         Task<ServiceResponse<List<User>>> GetAll();
 
         //Get User
-        Task<ServiceResponse<User>> GetById(int id);
+        Task<ServiceResponse<User>> GetById(Guid id);
 
         //Add User
         Task<ServiceResponse<List<User>>> Add(User usuario);
@@ -23,7 +24,7 @@ namespace Final_project_webapi.Services.UserService
         Task<ServiceResponse<int>> GetCount();
 
         //Delete User end point
-        Task<ServiceResponse<List<User>>> DeleteUser(int id);
+        Task<ServiceResponse<List<User>>> DeleteUser(Guid id);
 
     }
 }

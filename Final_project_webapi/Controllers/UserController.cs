@@ -1,4 +1,5 @@
-﻿using Final_project_webapi.Models;
+﻿using Final_project_webapi.Dtos;
+using Final_project_webapi.Models;
 using Final_project_webapi.Services.UserService;
 
 namespace Final_project_webapi.Controllers
@@ -18,17 +19,7 @@ namespace Final_project_webapi.Controllers
         [HttpGet("getAll")]
         public async Task<ActionResult<ServiceResponse<List<User>>>> GetAll()
         {
-            try
-            {
-                return Ok( await userService.GetAll());
-
-            }
-            catch (Exception Ex)
-            {
-
-                return Ok(Ex.Message);
-            }
-
+            return Ok(await userService.GetAll());
         }
         //Add User
         [HttpPost("add")]
@@ -39,20 +30,9 @@ namespace Final_project_webapi.Controllers
 
         //Get User
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<ServiceResponse<User>>> GetById(int id)
+        public async Task<ActionResult<ServiceResponse<User>>> GetById(Guid id)
         {
-            try
-            {
-
-                return Ok(await userService.GetById(id));
-
-            }
-            catch (Exception Ex)
-            {
-
-                return Ok(Ex.Message);
-            }
-
+            return await userService.GetById(id);
         }
 
         //Update User
@@ -71,18 +51,9 @@ namespace Final_project_webapi.Controllers
 
         //Delete User end point
         [HttpDelete("delete/{id}")]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> DeleteUser(int id)
+        public async Task<ActionResult<ServiceResponse<List<User>>>> DeleteUser(Guid id)
         {
-            try
-            {
-                return Ok(await userService.DeleteUser(id));
-            }
-            catch (Exception Ex)
-            {
-
-                return Ok(Ex.Message);
-            }
-
+            return await userService.DeleteUser(id);
         }
 
     }

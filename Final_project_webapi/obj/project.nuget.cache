@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "E6/y0/AublyAtC192JmvicGlxPW13+kS3acBq/SyLSTH8PDK8NPTYnXTCOIA+o+Cx/S7MYmkjE2Dn6RlXm5RTg==",
+  "dgSpecHash": "UukRh/NtJ4Ay8gkMD6OUFWkRQjKE2Wq/1sZdZkLFPmb5vC1Dz0vPbhxvvWnX0MaoNkl7+cBQ9I+7wgANWP89vQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\dfuentesmolina\\Documents\\WebApiCourse\\Final_Project\\Final_project_webapi\\Final_project_webapi\\Final_project_webapi.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\dfuentesmolina\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
     "C:\\Users\\dfuentesmolina\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\dfuentesmolina\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\dfuentesmolina\\.nuget\\packages\\microsoft.data.sqlite.core\\6.0.10\\microsoft.data.sqlite.core.6.0.10.nupkg.sha512",
     "C:\\Users\\dfuentesmolina\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.10\\microsoft.entityframeworkcore.6.0.10.nupkg.sha512",
     "C:\\Users\\dfuentesmolina\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\6.0.10\\microsoft.entityframeworkcore.abstractions.6.0.10.nupkg.sha512",

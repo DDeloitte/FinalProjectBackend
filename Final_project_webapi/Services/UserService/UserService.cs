@@ -1,4 +1,6 @@
-﻿using Final_project_webapi.Models;
+﻿using Final_project_webapi.Dtos;
+using Final_project_webapi.Models;
+using System;
 
 namespace Final_project_webapi.Services.UserService
 {
@@ -7,10 +9,10 @@ namespace Final_project_webapi.Services.UserService
         //Dummy list of users
         private static List<User> usersList = new List<User>()
         {
-            new User() {UserId = 1, FName = "David", LName = "Molina", UserType = UserType.User, Phone = 4423187283, Email = "email1@email.com" },
-            new User() {UserId = 2, FName = "Guillermo", LName = "Pacheco", UserType = UserType.SystemAdmin, Phone = 4423387273, Email = "email2@email.com" },
-            new User() {UserId = 3, FName = "Daniel", LName = "Gamboa", UserType = UserType.SystemAdmin, Phone = 4422187453, Email = "email3@email.com" },
-            new User() {UserId = 4, FName = "Oscar", LName = "Guerrero", UserType = UserType.SystemAdmin, Phone = 4429134283, Email = "email4@email.com" }
+            new User() {UserId = Guid.NewGuid(), FName = "David", LName = "Molina", UserType = UserType.User, Phone = 4423187283, Email = "email1@email.com" },
+            new User() {UserId = Guid.NewGuid(), FName = "Guillermo", LName = "Pacheco", UserType = UserType.SystemAdmin, Phone = 4423387273, Email = "email2@email.com" },
+            new User() {UserId = Guid.NewGuid(), FName = "Daniel", LName = "Gamboa", UserType = UserType.SystemAdmin, Phone = 4422187453, Email = "email3@email.com" },
+            new User() {UserId = Guid.NewGuid(), FName = "Oscar", LName = "Guerrero", UserType = UserType.SystemAdmin, Phone = 4429134283, Email = "email4@email.com" }
         };
 
         //Async is used alongside Task and await to use asynchronous calls, and it´s faster for fetching data from a database
@@ -19,73 +21,132 @@ namespace Final_project_webapi.Services.UserService
         //Add user method
         public async Task<ServiceResponse<List<User>>> Add(User usuario)
         {
-            var serviceResponse = new ServiceResponse<List<User>>();
-            var userListCount = usersList.Count();
-            usuario.UserId = userListCount + 1;
-            usersList.Add(usuario);
-            serviceResponse.Data = usersList;
+            ServiceResponse<List<User>> serviceResponse = new ServiceResponse<List<User>>();
+            try
+            {
+                usuario.UserId = Guid.NewGuid();
+                usersList.Add(usuario);
+                serviceResponse.Data = usersList;
+            }
+            catch (Exception ex)
+            {
+
+                serviceResponse.Success = false;
+                serviceResponse.Error = ex.Message;
+            }
+            
 
             return serviceResponse;
         }
 
         //Delete User
-        public async Task<ServiceResponse<List<User>>> DeleteUser(int id)
+        public async Task<ServiceResponse<List<User>>> DeleteUser(Guid id)
         {
+            ServiceResponse<List<User>> serviceResponse = new ServiceResponse<List<User>>();
 
-            //First identify the user
-            foreach (var user in usersList)
+            try
             {
-                if (user.UserId == id)
-                {
-                    usersList.Remove(user);
-                }
+                var user = usersList.First(user => user.UserId == id);
+                usersList.Remove(user);
+                serviceResponse.Data = usersList;
+
+            }
+            catch (Exception Ex)
+            {
+
+                serviceResponse.Success = false;
+                serviceResponse.Error = Ex.Message;
             }
 
-            return new ServiceResponse<List<User>> { Data = usersList };
+            return serviceResponse;
 
         }
 
         //Get all users
         public async Task<ServiceResponse<List<User>>> GetAll()
         {
+            ServiceResponse<List<User>> serviceResponse = new ServiceResponse<List<User>>();
+            try
+            {
+                serviceResponse.Data = usersList;
 
-            return new ServiceResponse<List<User>> { Data = usersList };
+            }
+            catch (Exception Ex)
+            {
+
+                serviceResponse.Success = false;
+                serviceResponse.Error = Ex.Message;
+            }
+
+            return serviceResponse;
 
         }
 
         //Get user by Id
-        public async Task<ServiceResponse<User>> GetById(int id)
+        public async Task<ServiceResponse<User>> GetById(Guid id)
         {
-            var serviceResponse = new ServiceResponse<User>();
-            var user = usersList.First(user => user.UserId == id);
-            serviceResponse.Data = user;
-            return serviceResponse;
+            ServiceResponse<User> serviceResponse = new ServiceResponse<User>();
+            
+            try
+            {
+                var user = usersList.First(user => user.UserId == id);
+                serviceResponse.Data = user;
+            }
+            catch (Exception Ex)
+            {
 
+                serviceResponse.Success = false;
+                serviceResponse.Error = Ex.Message;
+            }
+
+            return serviceResponse;
 
         }
 
         //Get number of entries in archives
         public async Task<ServiceResponse<int>> GetCount()
         {
-            var usersCount = usersList.Count();
-            return new ServiceResponse<int> { Data = usersCount };
+            ServiceResponse<int> serviceResponse = new ServiceResponse<int>();
+            try
+            {
+                var usersCount = usersList.Count();
+                serviceResponse.Data = usersCount;
+            }
+            catch (Exception ex)
+            {
+
+                serviceResponse.Success = false;
+                serviceResponse.Error = ex.Message;
+            }
+
+            return serviceResponse;
         }
 
         //Update User
         public async Task<ServiceResponse<User>> UpdateUser(User usuario)
         {
-            foreach (var user in usersList)
+            ServiceResponse<User> serviceResponse = new ServiceResponse<User>();
+            try
             {
-                if (user.UserId == usuario.UserId)
-                {
-                    user.UserType = usuario.UserType;
-                    user.FName = usuario.FName;
-                    user.LName = usuario.LName;
-                    user.Phone = usuario.Phone;
-                    user.Email = usuario.Email;
-                }
+                User user = usersList.First(user => user.UserId == usuario.UserId);
+
+                user.UserType = usuario.UserType;
+                user.FName = usuario.FName;
+                user.LName = usuario.LName;
+                user.Phone = usuario.Phone;
+                user.Email = usuario.Email;
+
+                serviceResponse.Data = usuario;
             }
-            return new ServiceResponse<User> { Data = usuario };
+            catch (Exception ex)
+            {
+
+                serviceResponse.Success = false;
+                serviceResponse.Error = ex.Message;
+            }
+
+
+            return serviceResponse;
         }
     }
 }
