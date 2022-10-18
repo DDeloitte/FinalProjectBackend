@@ -1,5 +1,7 @@
-﻿using Final_project_webapi.Dtos;
+﻿using Final_project_webapi.Data;
+using Final_project_webapi.Dtos;
 using Final_project_webapi.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace Final_project_webapi.Services.UserService
@@ -9,11 +11,17 @@ namespace Final_project_webapi.Services.UserService
         //Dummy list of users
         private static List<User> usersList = new List<User>()
         {
-            new User() {UserId = Guid.NewGuid(), FName = "David", LName = "Molina", UserType = UserType.User, Phone = 4423187283, Email = "email1@email.com" },
-            new User() {UserId = Guid.NewGuid(), FName = "Guillermo", LName = "Pacheco", UserType = UserType.SystemAdmin, Phone = 4423387273, Email = "email2@email.com" },
-            new User() {UserId = Guid.NewGuid(), FName = "Daniel", LName = "Gamboa", UserType = UserType.SystemAdmin, Phone = 4422187453, Email = "email3@email.com" },
-            new User() {UserId = Guid.NewGuid(), FName = "Oscar", LName = "Guerrero", UserType = UserType.SystemAdmin, Phone = 4429134283, Email = "email4@email.com" }
+            new User() {UserId = 1, FName = "David", LName = "Molina", UserType = UserType.User, Phone = 4423187283, Email = "email1@email.com" },
+            new User() {UserId = 2, FName = "Guillermo", LName = "Pacheco", UserType = UserType.SystemAdmin, Phone = 4423387273, Email = "email2@email.com" },
+            new User() {UserId = 3, FName = "Daniel", LName = "Gamboa", UserType = UserType.SystemAdmin, Phone = 4422187453, Email = "email3@email.com" },
+            new User() {UserId = 4, FName = "Oscar", LName = "Guerrero", UserType = UserType.SystemAdmin, Phone = 4429134283, Email = "email4@email.com" }
         };
+        private readonly DataContext context;
+
+        public UserService(DataContext context)
+        {
+            this.context = context;
+        }
 
         //Async is used alongside Task and await to use asynchronous calls, and it´s faster for fetching data from a database
         //ServiceResponse is used alongside the new object and it helps in the frontend to print a better message to the user
@@ -24,7 +32,7 @@ namespace Final_project_webapi.Services.UserService
             ServiceResponse<List<User>> serviceResponse = new ServiceResponse<List<User>>();
             try
             {
-                usuario.UserId = Guid.NewGuid();
+                usuario.UserId = 1 + usersList.Count();
                 usersList.Add(usuario);
                 serviceResponse.Data = usersList;
             }
@@ -40,7 +48,7 @@ namespace Final_project_webapi.Services.UserService
         }
 
         //Delete User
-        public async Task<ServiceResponse<List<User>>> DeleteUser(Guid id)
+        public async Task<ServiceResponse<List<User>>> DeleteUser(int id)
         {
             ServiceResponse<List<User>> serviceResponse = new ServiceResponse<List<User>>();
 
@@ -65,9 +73,10 @@ namespace Final_project_webapi.Services.UserService
         //Get all users
         public async Task<ServiceResponse<List<User>>> GetAll()
         {
-            ServiceResponse<List<User>> serviceResponse = new ServiceResponse<List<User>>();
+            var serviceResponse = new ServiceResponse<List<User>>();
             try
             {
+
                 serviceResponse.Data = usersList;
 
             }
@@ -82,8 +91,16 @@ namespace Final_project_webapi.Services.UserService
 
         }
 
+        //public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
+        //{
+        //    return new ServceResponse<List<GetCharacterDto>>
+        //    {
+        //        Data = character.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList()
+        //    };
+        //}
+
         //Get user by Id
-        public async Task<ServiceResponse<User>> GetById(Guid id)
+        public async Task<ServiceResponse<User>> GetById(int id)
         {
             ServiceResponse<User> serviceResponse = new ServiceResponse<User>();
             

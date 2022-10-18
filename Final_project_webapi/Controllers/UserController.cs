@@ -30,7 +30,7 @@ namespace Final_project_webapi.Controllers
 
         //Get User
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<ServiceResponse<User>>> GetById(Guid id)
+        public async Task<ActionResult<ServiceResponse<User>>> GetById(int id)
         {
             return await userService.GetById(id);
         }
@@ -51,7 +51,7 @@ namespace Final_project_webapi.Controllers
 
         //Delete User end point
         [HttpDelete("delete/{id}")]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> DeleteUser(Guid id)
+        public async Task<ActionResult<ServiceResponse<List<User>>>> DeleteUser(int id)
         {
             return await userService.DeleteUser(id);
         }

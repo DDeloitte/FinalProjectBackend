@@ -12,7 +12,7 @@ namespace Final_project_webapi.Services.UserService
         Task<ServiceResponse<List<User>>> GetAll();
 
         //Get User
-        Task<ServiceResponse<User>> GetById(Guid id);
+        Task<ServiceResponse<User>> GetById(int id);
 
         //Add User
         Task<ServiceResponse<List<User>>> Add(User usuario);
@@ -24,7 +24,7 @@ namespace Final_project_webapi.Services.UserService
         Task<ServiceResponse<int>> GetCount();
 
         //Delete User end point
-        Task<ServiceResponse<List<User>>> DeleteUser(Guid id);
+        Task<ServiceResponse<List<User>>> DeleteUser(int id);
 
     }
 }
