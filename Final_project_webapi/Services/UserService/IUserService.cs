@@ -15,7 +15,7 @@ namespace Final_project_webapi.Services.UserService
         Task<ServiceResponse<User>> GetById(int id);
 
         //Add User
-        Task<ServiceResponse<List<User>>> Add(User usuario);
+        Task<ServiceResponse<User>> Add(User usuario);
 
         //Update User
         Task<ServiceResponse<User>> UpdateUser(User usuario);

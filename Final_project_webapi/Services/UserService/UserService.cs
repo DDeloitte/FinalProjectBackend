@@ -27,14 +27,16 @@ namespace Final_project_webapi.Services.UserService
         //ServiceResponse is used alongside the new object and it helps in the frontend to print a better message to the user
 
         //Add user method
-        public async Task<ServiceResponse<List<User>>> Add(User usuario)
+        public async Task<ServiceResponse<User>> Add(User usuario)
         {
-            ServiceResponse<List<User>> serviceResponse = new ServiceResponse<List<User>>();
+            var serviceResponse = new ServiceResponse<User>();
             try
             {
                 usuario.UserId = 1 + usersList.Count();
                 usersList.Add(usuario);
-                serviceResponse.Data = usersList;
+                context.Users.Add(usuario);
+                await context.SaveChangesAsync();
+                serviceResponse.Data = usuario;
             }
             catch (Exception ex)
             {
@@ -77,7 +79,7 @@ namespace Final_project_webapi.Services.UserService
             try
             {
 
-                serviceResponse.Data = usersList;
+                serviceResponse.Data = await context.Users.ToListAsync(); ;
 
             }
             catch (Exception Ex)

@@ -23,7 +23,7 @@ namespace Final_project_webapi.Controllers
         }
         //Add User
         [HttpPost("add")]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> Add(User usuario)
+        public async Task<ActionResult<ServiceResponse<User>>> Add(User usuario)
         {
             return Ok(await userService.Add(usuario));
         }
