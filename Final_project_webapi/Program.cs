@@ -7,10 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+//Configure EF to work with database;
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Automapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 //Allows Cross Origin Resource Sharing requests
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder => {
@@ -20,11 +27,8 @@ builder.Services.AddCors(p => p.AddPolicy("corsapp", builder => {
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 
-//Configure EF to work with database;
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 
 

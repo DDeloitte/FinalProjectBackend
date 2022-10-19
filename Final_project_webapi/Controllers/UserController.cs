@@ -17,29 +17,40 @@ namespace Final_project_webapi.Controllers
 
         //GetAll Users
         [HttpGet("getAll")]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> GetAll()
+        public async Task<ActionResult<ServiceResponse<List<GetUserDto>>>> GetAll()
         {
             return Ok(await userService.GetAll());
         }
         //Add User
         [HttpPost("add")]
-        public async Task<ActionResult<ServiceResponse<User>>> Add(User usuario)
+        public async Task<ActionResult<ServiceResponse<GetUserDto>>> Add(AddUserDto usuario)
         {
             return Ok(await userService.Add(usuario));
         }
 
         //Get User
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<ServiceResponse<User>>> GetById(int id)
+        public async Task<ActionResult<ServiceResponse<GetUserDto>>> GetById(int id)
         {
-            return await userService.GetById(id);
+            var serviceResponse = await userService.GetById(id);
+            if (serviceResponse.Data == null)
+            {
+                serviceResponse.Success = false;
+                return NotFound(serviceResponse);
+            }
+            return Ok(serviceResponse);
         }
 
         //Update User
         [HttpPut("update")]
-        public async Task<ActionResult<ServiceResponse<User>>> UpdateUser(User usuario)
+        public async Task<ActionResult<ServiceResponse<GetUserDto>>> UpdateUser(UpdateUserDto usuario)
         {
-            return Ok(await userService.UpdateUser(usuario));
+            var serviceResponse = await userService.UpdateUser(usuario);
+            if(serviceResponse.Data == null)
+            {
+                return NotFound(serviceResponse);
+            }
+            return Ok(serviceResponse);
         }
 
         //Users in datababase
@@ -51,9 +62,14 @@ namespace Final_project_webapi.Controllers
 
         //Delete User end point
         [HttpDelete("delete/{id}")]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> DeleteUser(int id)
+        public async Task<ActionResult<ServiceResponse<List<GetUserDto>>>> DeleteUser(int id)
         {
-            return await userService.DeleteUser(id);
+            var serviceResponse = await userService.DeleteUser(id);
+            if (serviceResponse.Data == null)
+            {
+                return NotFound(serviceResponse);
+            }
+            return Ok(serviceResponse);
         }
 
     }

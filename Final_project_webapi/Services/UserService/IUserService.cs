@@ -9,22 +9,22 @@ namespace Final_project_webapi.Services.UserService
     public interface IUserService
     {
         //GetAll Users
-        Task<ServiceResponse<List<User>>> GetAll();
+        Task<ServiceResponse<List<GetUserDto>>> GetAll();
 
         //Get User
-        Task<ServiceResponse<User>> GetById(int id);
+        Task<ServiceResponse<GetUserDto>> GetById(int id);
 
         //Add User
-        Task<ServiceResponse<User>> Add(User usuario);
+        Task<ServiceResponse<GetUserDto>> Add(AddUserDto usuario);
 
         //Update User
-        Task<ServiceResponse<User>> UpdateUser(User usuario);
+        Task<ServiceResponse<GetUserDto>> UpdateUser(UpdateUserDto usuario);
 
         //Users in datababase
         Task<ServiceResponse<int>> GetCount();
 
         //Delete User end point
-        Task<ServiceResponse<List<User>>> DeleteUser(int id);
+        Task<ServiceResponse<List<GetUserDto>>> DeleteUser(int id);
 
     }
 }

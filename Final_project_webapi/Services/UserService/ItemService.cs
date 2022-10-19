@@ -1,36 +1,37 @@
-﻿using Final_project_webapi.Models;
+﻿using AutoMapper;
+using Final_project_webapi.Data;
+using Final_project_webapi.Dtos;
+using Final_project_webapi.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Final_project_webapi.Services.UserService
 {
     public class ItemService : IItemService
     {
-        //Lista predeterminada de archivos de oficina
-        private static List<Item> itemsList = new List<Item>()
+        //Variables for data injection sqlite and using AutoMapper
+        private readonly DataContext context;
+        private readonly IMapper mapper;
+
+        //Constructors for data injection and automapper
+        public ItemService(IMapper mapper, DataContext context)
         {
+            this.mapper = mapper;
+            this.context = context;
+        }
 
-            new Item() { itemId = 1001, itemName = "CPU", itemType = DepartmentType.IT, description = "CPU data", quantity = 3, userId = 3},
-            new Item() { itemId = 1002, itemName = "GPU", itemType = DepartmentType.IT, description = "GPU data", quantity = 5, userId = 4},
-
-            new Item() { itemId = 1003, itemName = "Phone", itemType = DepartmentType.Sales, description = "Phone data", quantity = 11, userId = 1},
-            new Item() { itemId = 1004, itemName = "Contact List", itemType = DepartmentType.Sales, description = "Contact List data", quantity = 5, userId = 1},
-
-            new Item() { itemId = 1005, itemName = "Stappler", itemType = DepartmentType.HR, description = "Stappler data", quantity = 7, userId = 2},
-            new Item() { itemId = 1006, itemName = "Employees List", itemType = DepartmentType.HR, description = "Employee list data", quantity = 2, userId = 2},
-
-            new Item() { itemId = 1007, itemName = "CNC", itemType = DepartmentType.Production, description = "CNC data", quantity = 1, userId = 4},
-            new Item() { itemId = 1008, itemName = "3D Printer", itemType = DepartmentType.Production, description = "3D printer data", quantity = 2, userId = 3},
-        };
-
-        public async Task<ServiceResponse<List<Item>>> Add(Item item)
+        public async Task<ServiceResponse<GetItemDto>> Add(AddItemDto item)
         {
-            ServiceResponse<List<Item>> serviceResponse = new ServiceResponse<List<Item>>();
+            var serviceResponse = new ServiceResponse<GetItemDto>();
             try
             {
-                var itemsListCount = itemsList.Count();
-                item.itemId = 1000 + 1 + itemsListCount;
-                itemsList.Add(item);
-                serviceResponse.Data = itemsList;
+                //var itemsListCount = context.Items.Count();
+                //item.itemId = 1000 + 1 + itemsListCount;
+                Item addItem = mapper.Map<Item>(item);
+                context.Add(addItem);
+                await context.SaveChangesAsync();
+
+                serviceResponse.Data = mapper.Map<GetItemDto>(addItem);
             }
             catch (Exception ex)
             {
@@ -42,20 +43,15 @@ namespace Final_project_webapi.Services.UserService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<Item>>> DeleteItem(int id)
+        public async Task<ServiceResponse<List<GetItemDto>>> DeleteItem(int id)
         {
-            ServiceResponse<List<Item>> serviceResponse = new ServiceResponse<List<Item>>();
+            var serviceResponse = new ServiceResponse<List<GetItemDto>>();
             try
             {
-
-                foreach (var item in itemsList)
-                {
-                    if (item.itemId == id)
-                    {
-                        itemsList.Remove(item);
-                    }
-                }
-                serviceResponse.Data = itemsList;
+                Item item = await context.Items.FirstAsync(i => i.itemId == id);
+                context.Remove(item);
+                await context.SaveChangesAsync();
+                serviceResponse.Data = context.Items.Select(i => mapper.Map<GetItemDto>(i)).ToList();
             }
             catch (Exception ex)
             {
@@ -67,13 +63,13 @@ namespace Final_project_webapi.Services.UserService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<Item>>> GetAll()
+        public async Task<ServiceResponse<List<GetItemDto>>> GetAll()
         {
-            ServiceResponse<List<Item>> serviceResponse = new ServiceResponse<List<Item>>();
-
+            var serviceResponse = new ServiceResponse<List<GetItemDto>>();
+            var dbItem = await context.Items.ToListAsync();
             try
             {
-                serviceResponse.Data = itemsList;
+                serviceResponse.Data = dbItem.Select(i => mapper.Map<GetItemDto>(i)).ToList();
             }
             catch (Exception ex)
             {
@@ -84,95 +80,45 @@ namespace Final_project_webapi.Services.UserService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<Item>> GetItemById(int id)
+        public async Task<ServiceResponse<GetItemDto>> GetItemById(int id)
         {
-            ServiceResponse<Item> serviceResponse = new ServiceResponse<Item>();
-            try
-            {
-                var item = itemsList.First(item => item.itemId == id);
-                serviceResponse.Data = item;
-                return serviceResponse;
-
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Error = ex.Message;
-            }
+            var serviceResponse = new ServiceResponse<GetItemDto>();
+            var itemById = await context.Items.FirstOrDefaultAsync(i => i.itemId == id);
+            serviceResponse.Data = mapper.Map<GetItemDto>(itemById);
 
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<Item>>> GetItemByUser(int id)
+        public async Task<ServiceResponse<List<GetItemDto>>> GetItemByUser(int id)
         {
-            ServiceResponse<List<Item>> serviceResponse = new ServiceResponse<List<Item>>();
-            try
-            {
-                List<Item> listByUser = new List<Item>();
-                foreach (var item in itemsList)
-                {
-                    if (item.userId == id)
-                    {
-                        listByUser.Add(item);
-                    }
-                }
-                serviceResponse.Data = listByUser;
-            }
-            catch (Exception ex)
-            {
+            var serviceResponse = new ServiceResponse<List<GetItemDto>>();
+            var dbItems = await context.Items.Where(item => item.userId == id).ToListAsync();
+            serviceResponse.Data = mapper.Map<List<GetItemDto>>(dbItems);
 
-                serviceResponse.Success = false;
-                serviceResponse.Error = ex.Message;
-            }
+            return serviceResponse;
+
+        }
+
+        public async Task<ServiceResponse<List<GetItemDto>>> ItemByDepartmentName(DepartmentType departmentType)
+        {
+            var serviceResponse = new ServiceResponse<List<GetItemDto>>();
+            var itemByDepartment = await context.Items.Where(i => i.itemType ==departmentType).ToListAsync();
+            serviceResponse.Data = mapper.Map<List<GetItemDto>>(itemByDepartment);
 
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<Item>>> ItemByDepartmentName(DepartmentType departmentType)
+        public async Task<ServiceResponse<GetItemDto>> UpdateItem(UpdateItemDto item)
         {
-            ServiceResponse<List<Item>> serviceResponse = new ServiceResponse<List<Item>>();
+            var serviceResponse = new ServiceResponse<GetItemDto>();
             try
             {
-                List<Item> listByDepartment = new List<Item>();
-                foreach (var item in itemsList)
-                {
-                    if (item.itemType == departmentType)
-                    {
-                        listByDepartment.Add(item);
-                    }
-                }
-                serviceResponse.Data = listByDepartment;
-            }
-            catch (Exception ex)
-            {
+                var itemUpdate = await context.Items.FirstOrDefaultAsync(i => i.itemId == item.itemId);
 
-                serviceResponse.Success = false;
-                serviceResponse.Error = ex.Message;
-            }
+                mapper.Map(item, itemUpdate);
+                await context.SaveChangesAsync();
 
-            return serviceResponse;
-        }
-
-        public async Task<ServiceResponse<Item>> UpdateItem(Item item)
-        {
-            ServiceResponse<Item> serviceResponse = new ServiceResponse<Item>();
-            try
-            {
-                foreach (var objeto in itemsList)
-                {
-                    if (objeto.itemId == item.itemId)
-                    {
-
-                        objeto.itemName = item.itemName;
-                        objeto.itemType = item.itemType;
-                        objeto.description = item.description;
-                        objeto.quantity = item.quantity;
-                        objeto.userId = item.userId;
-
-                    }
-
-                }
-                serviceResponse.Data = item;
+                serviceResponse.Data = mapper.Map<GetItemDto>(itemUpdate);
             }
             catch (Exception ex)
             {
