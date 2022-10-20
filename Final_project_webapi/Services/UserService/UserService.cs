@@ -30,9 +30,9 @@ namespace Final_project_webapi.Services.UserService
             try
             {
                 User user = mapper.Map<User>(usuario);
-                context.Users.Add(user);
-                await context.SaveChangesAsync();
-                serviceResponse.Data = mapper.Map<GetUserDto>(user);
+                context.Users.Add(user);//context.Users is the list in SQL, here we add the user to the database
+                await context.SaveChangesAsync();//We save the changes to de DB
+                serviceResponse.Data = mapper.Map<GetUserDto>(user);//Prints the user added 
 
             }
             catch (Exception ex)
