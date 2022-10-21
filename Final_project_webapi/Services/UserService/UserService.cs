@@ -20,6 +20,7 @@ namespace Final_project_webapi.Services.UserService
             this.context = context;
         }
 
+
         //Async is used alongside Task and await to use asynchronous calls, and it´s better for fetching data from a database
         //ServiceResponse is used alongside the new object and it helps in the frontend to print a better message to the user
 
@@ -29,7 +30,10 @@ namespace Final_project_webapi.Services.UserService
             var serviceResponse = new ServiceResponse<GetUserDto>();
             try
             {
+                
                 User user = mapper.Map<User>(usuario);
+                user.UserId = context.Users.Count() + 1;
+                //user.UserId = context.Users.Last().UserId + 1; 
                 context.Users.Add(user);//context.Users is the list in SQL, here we add the user to the database
                 await context.SaveChangesAsync();//We save the changes to de DB
                 serviceResponse.Data = mapper.Map<GetUserDto>(user);//Prints the user added 

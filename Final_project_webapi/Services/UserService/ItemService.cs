@@ -80,11 +80,52 @@ namespace Final_project_webapi.Services.UserService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<GetItemDto>> GetItemById(int id)
+        public async Task<ServiceResponse<GetItemDto>> GetItemById(int id, int qty, int newUserId)
         {
             var serviceResponse = new ServiceResponse<GetItemDto>();
-            var itemById = await context.Items.FirstOrDefaultAsync(i => i.itemId == id);
-            serviceResponse.Data = mapper.Map<GetItemDto>(itemById);
+            try
+            {
+                var itemById = await context.Items.FirstOrDefaultAsync(i => i.itemId == id);//First the item must exists
+                //The new user must exists
+                var newUserComprobation = await context.Users.FirstOrDefaultAsync(u => u.UserId == newUserId);
+
+                if (qty < itemById.quantity)//If the input quantity is minor, we clone the object
+                {
+                    Item newItem = new Item();//Creates a new Item object
+
+                    //newItem.itemId = itemById.itemId;
+                    newItem.itemName = itemById.itemName;
+                    newItem.description = itemById.description;
+                    newItem.itemType = itemById.itemType;
+                    newItem.itemId = context.Items.Count() + 1001;
+                    newItem.quantity = qty;
+                    newItem.userId = newUserId;
+
+                    itemById.quantity = itemById.quantity - qty;
+                    context.Add(newItem);//Adds the new item
+                    await context.SaveChangesAsync();//Saves the changes
+                    serviceResponse.Data = mapper.Map<GetItemDto>(itemById);
+                }
+                else if (qty == itemById.quantity)//If the input is the same as the actual qty, change only the userId
+                {
+                    itemById.userId = newUserId;
+                    await context.SaveChangesAsync();//Save changes
+                    serviceResponse.Data = mapper.Map<GetItemDto>(itemById);
+                }
+                else 
+                { 
+                    serviceResponse.Error = "Error in quantity or new user Id";
+                    serviceResponse.Success = false;
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Error = ex.Message;
+            }
 
             return serviceResponse;
         }

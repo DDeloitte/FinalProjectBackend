@@ -31,10 +31,10 @@ namespace Final_project_webapi.Controllers
         }
 
         //Get Item By Id
-        [HttpGet("getItem/{id}")]
-        public async Task<ActionResult<ServiceResponse<GetItemDto>>> GetItemById(int id)
+        [HttpGet("getItem/item/{id}/item/{qty}/newUser/{newUserId}")]
+        public async Task<ActionResult<ServiceResponse<GetItemDto>>> GetItemById(int id, int qty, int newUserId)
         {
-            var serviceResponse = await itemService.GetItemById(id);
+            var serviceResponse = await itemService.GetItemById(id, qty, newUserId);
             if (serviceResponse.Data == null)
             {
                 return NotFound(serviceResponse);

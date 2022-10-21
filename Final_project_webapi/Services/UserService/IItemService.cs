@@ -9,7 +9,7 @@ namespace Final_project_webapi.Services.UserService
         Task<ServiceResponse<List<GetItemDto>>> GetAll();
 
         //Get Item
-        Task<ServiceResponse<GetItemDto>> GetItemById(int id);
+        Task<ServiceResponse<GetItemDto>> GetItemById(int id, int qty, int newUserId);
 
         //Add Item
         Task<ServiceResponse<GetItemDto>> Add(AddItemDto item);
